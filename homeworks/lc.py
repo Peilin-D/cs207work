@@ -85,5 +85,3 @@ class LightCurveDB(object):
     def retrieve(self, facet, value):
         if facet == 'tile':
             return self._tile_index[value]
-
-
