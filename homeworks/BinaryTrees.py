@@ -95,8 +95,9 @@ class BinarySearchTree(BinaryTree):
         
     def delete(self, data):        
         if self.isRoot() and self.hasNoChildren() and self.data==data:#deleting the whole tree
-            self.root=None#todo call a destructor that signals GC it can reap
-            #self._update_sizes(up=False) #really tree is gone
+            raise Exception('Cannot delete node. Tree must have at least 1 node')
+            # self.root=None # todo call a destructor that signals GC it can reap
+            # self._update_sizes(up=False) #really tree is gone
             self._remove_hook()
         elif self.hasAnyChild():
             noder = self.search(data)
@@ -143,7 +144,18 @@ class BinarySearchTree(BinaryTree):
                     node.left.parent = node.parent
                     node.parent.right = node.left
                 else: #root
-                    self.root = node.left
+                    # self.root = node.left
+                    node.data = node.left.data
+                    left_node = node.left
+                    nll = left_node.left
+                    nlr = left_node.right
+                    if nll:
+                        nll.parent = node
+                        node.left = nll
+                    if nlr:
+                        nrl.parent = node
+                        node.right = nrl
+                    del left_node
                 #node._update_sizes(up=False, by=node.count)
                 node._remove_hook(by=node.count)
                 del node
@@ -155,7 +167,18 @@ class BinarySearchTree(BinaryTree):
                     node.right.parent = node.parent
                     node.parent.right = node.right
                 else: #root
-                    self.root = node.right
+                    # self.root = node.right
+                    node.data = node.right.data
+                    right_node = node.right
+                    nrl = right_node.left
+                    nrr = right_node.right
+                    if nrl:
+                        nrl.parent = node
+                        node.left = nrl
+                    if nrr:
+                        nrr.parent = node
+                        node.right = nrr
+                    del right_node
                 #node._update_sizes(up=False, by=node.count)
                 node._remove_hook(by=node.count)
                 del node
